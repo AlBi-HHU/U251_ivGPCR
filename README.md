@@ -12,4 +12,6 @@ Reproducible pipeline of the experiments described in the mnauscript "..."
 
 * Write this README
 * networks --> provide as data or get via Snakemake?
+* start w/raw data?
+* Is Johannes' analysis in? 
 
