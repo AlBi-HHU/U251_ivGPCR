@@ -1,0 +1,7 @@
+	factor
+untreated_1	untreated
+untreated_2	untreated
+untreated_3	untreated
+stimulated_1	stimulated
+stimulated_2	stimulated
+stimulated_3	stimulated

@@ -1,0 +1,10 @@
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python >=3.3
+  - pandas =0.19.1
+  - xlrd =1.0.0
+  - matplotlib
+  - seaborn
