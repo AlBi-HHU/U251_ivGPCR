@@ -1,0 +1,7 @@
+	factor
+stimulated_1	stimulated
+stimulated_2	stimulated
+stimulated_3	stimulated
+US28_1	US28
+US28_2	US28
+US28_3	US28

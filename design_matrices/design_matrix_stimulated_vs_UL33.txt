@@ -1,0 +1,7 @@
+	factor
+stimulated_1	stimulated
+stimulated_2	stimulated
+stimulated_3	stimulated
+UL33_1	UL33
+UL33_2	UL33
+UL33_3	UL33
