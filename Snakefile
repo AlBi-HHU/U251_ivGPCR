@@ -1,16 +1,60 @@
 configfile: "config.yaml" # json oder yaml file
 
-targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] #+ ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["eXamine/{}_{}_{}_nodes.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
+targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]]
+# + ["eXamine/{}_{}_{}_nodes.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
 
 
 #debug
-#print(targets)
+print(targets)
 
 wildcard_constraints:
     experiment = '\w+_vs_\w+'
 
 rule all:
-    input: targets#, "GO/all_go_uniq_ancestors.txt"
+    input: targets, "GO/all_go_uniq_ancestors.txt"#, "GO/all_go_uniq_ancestors.txt"
+
+rule biomart:
+    output:
+        "GO/GO_biomart.txt"
+    run:
+        import time
+        excep = True
+        while excep:
+            try:
+                shell("Rscript scripts/getGO.R > {output}")
+                excep = False
+            except Exception:
+                time.sleep(5)
+
+rule all_go_uniq:
+# Make a list of unique GO terms
+    input:
+        "GO/GO_biomart.txt"
+    output:
+        "GO/all_go_uniq.txt"
+    shell:
+        "cut -f2,4 {input} | sort -u  > {output}"
+
+rule ancestors:
+# extend the list of unique GO terms with their ancestors
+    input:
+        "GO/all_go_uniq.txt"
+    output:
+        "GO/all_go_uniq_ancestors.txt"
+    shell:
+        "Rscript scripts/getAncestors.R {input} | sort -u > {output}"
+
+rule topGO:
+# create, for each experiment, a list of occuring genes with all the GO terms they occur in
+    input:
+        "GO/GO_biomart.txt",
+        "scores/{experiment}_pvals.txt",
+        "GO/all_go_uniq_ancestors.txt"
+    output:
+        "GO/{experiment}_gsymb2go.map"
+    shell:
+        "python scripts/mappingTopGO.py {input} > {output}"
+        
 
 rule counts:
     input: "CountTable_RNA_seq_U251_ivGPCR.xlsx"
