@@ -1,7 +1,6 @@
 configfile: "config.yaml" # json oder yaml file
 
-targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]]
-# + ["eXamine/{}_{}_{}_nodes.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
+targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["scores/{}_{}_{}_sets.exm".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
 
 
 #debug
@@ -54,7 +53,7 @@ rule topGO:
         "GO/{experiment}_gsymb2go.map"
     shell:
         "python scripts/mappingTopGO.py {input} > {output}"
-        
+
 
 rule counts:
     input: "CountTable_RNA_seq_U251_ivGPCR.xlsx"
@@ -97,6 +96,34 @@ rule run_heinz:
         "scores/{experiment}_{FDR}_{network}_module.pdf"
     script:
         "scripts/run_heinz.py"
+
+rule heinz_res:
+    input: "scores/{experiment}_{FDR}_{network}_module.txt"
+    output: "scores/{experiment}_{FDR}_{network}_module.res"
+    shell: "grep -v NaN {input} | grep -v \"#\" > {output}"
+
+rule merge:
+    input: "scores/{experiment}_pvals.txt",
+        full_module="scores/{experiment}_{FDR}_{network}_module.txt"
+    output: "scores/{experiment}_{FDR}_{network}_nodes.exm"
+    shell:
+        "python scripts/merge.py {input[0]} {input[1]} GO/GO_biomart.txt GO/all_go_uniq_ancestors.txt > {output}"
+
+rule enrich:
+    input: "GO/{experiment}_gsymb2go.map",
+        "scores/{experiment}_{FDR}_{network}_module.res"
+    output: "scores/{experiment}_{FDR}_{network}_sets.exm",
+        temp("tmp/{experiment}_{FDR}_{network}_enr_GO_P.txt"),
+        temp("tmp/{experiment}_{FDR}_{network}_enr_GO_F.txt"),
+        temp("tmp/{experiment}_{FDR}_{network}_enr_GO_C.txt"),
+    shell:
+        "Rscript scripts/enrichment.R {input[0]} {input[1]} BP {output[1]}; "
+        "Rscript scripts/enrichment.R {input[0]} {input[1]} MF {output[2]}; "
+        "Rscript scripts/enrichment.R {input[0]} {input[1]} CC {output[3]}; "
+        "cat {output[1]} > {output[0]}; "
+        "tail -n +2 {output[2]} >> {output[0]}; "
+        "tail -n +2 {output[3]} >> {output[0]}; "
+
 
 rule merge_heinz_deseq2:
     input:
