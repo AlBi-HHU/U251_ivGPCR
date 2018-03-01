@@ -1,6 +1,6 @@
 configfile: "config.yaml" # json oder yaml file
 
-targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["scores/{}_{}_{}_sets.exm".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
+targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["data-sets/{}_{}_{}/interactions.links".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
 
 
 #debug
@@ -117,12 +117,27 @@ rule enrich:
         temp("tmp/{experiment}_{FDR}_{network}_enr_GO_F.txt"),
         temp("tmp/{experiment}_{FDR}_{network}_enr_GO_C.txt"),
     shell:
-        "Rscript scripts/enrichment.R {input[0]} {input[1]} BP {output[1]}; "
-        "Rscript scripts/enrichment.R {input[0]} {input[1]} MF {output[2]}; "
-        "Rscript scripts/enrichment.R {input[0]} {input[1]} CC {output[3]}; "
-        "cat {output[1]} > {output[0]}; "
-        "tail -n +2 {output[2]} >> {output[0]}; "
-        "tail -n +2 {output[3]} >> {output[0]}; "
+        """
+        Rscript scripts/enrichment.R {input[0]} {input[1]} BP {output[1]}
+        Rscript scripts/enrichment.R {input[0]} {input[1]} MF {output[2]}
+        Rscript scripts/enrichment.R {input[0]} {input[1]} CC {output[3]}
+        cat {output[1]} > {output[0]}
+        tail -n +2 {output[2]} >> {output[0]}
+        tail -n +2 {output[3]} >> {output[0]}
+        """
+
+rule eXamine_nodes:
+    input: "scores/{experiment}_{FDR}_{network}_module.res"
+    output: "data-sets/{experiment}_{FDR}_{network}/modules.links",
+        "data-sets/{experiment}_{FDR}_{network}/proteins.nodes",
+        "data-sets/{experiment}_{FDR}_{network}/modules.annotations"
+    shell: "python scripts/proteins.py -m {input} -ol {output[0]} -on {output[1]} -om {output[2]}"
+
+rule eXamine_interactions:
+    input: "networks/{network}.txt",
+    output: "data-sets/{experiment}_{FDR}_{network}/interactions.links"
+    shell:
+        "python scripts/interactions.py -e {network} -o {output}"
 
 
 rule merge_heinz_deseq2:
