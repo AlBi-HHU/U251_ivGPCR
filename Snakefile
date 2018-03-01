@@ -134,7 +134,7 @@ rule eXamine_nodes:
     shell: "python scripts/proteins.py -m {input} -ol {output[0]} -on {output[1]} -om {output[2]}"
 
 rule eXamine_interactions:
-    input: "networks/{network}.txt",
+    input: {network},
     output: "data-sets/{experiment}_{FDR}_{network}/interactions.links"
     shell:
         "python scripts/interactions.py -e {network} -o {output}"
