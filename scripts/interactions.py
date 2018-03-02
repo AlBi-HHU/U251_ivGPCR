@@ -4,8 +4,6 @@
 import argparse
 import csv
 import os
-if not os.path.exists("eXamine"):
-    os.makedirs("eXamine")
 
 parser = argparse.ArgumentParser(description = 'Creates a list of the edges')
 parser.add_argument('-e', type = str, help = 'name of (complete) edge file 9606.protein.links.v10.HGNC.txt', required = True)
@@ -30,5 +28,5 @@ with open(args.o, 'wt') as output:
     with open(args.e, 'rt') as interactome:
         reader = csv.reader(interactome, delimiter='\t')
         for row in reader:
-            if row[0] in proteins and row[1] in proteins:
+            if row[0] in proteins and row[1] in proteins and row[0] != row[1]: # no self loops!
                 writer.writerow([row[0],row[1]])
