@@ -14,4 +14,5 @@ Reproducible pipeline of the experiments described in the mnauscript "..."
 * networks --> provide as data or get via Snakemake?
 * start w/raw data?
 * Is Johannes' analysis in? 
+* KEGG pathway enrichment
 

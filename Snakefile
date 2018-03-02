@@ -1,6 +1,6 @@
 configfile: "config.yaml" # json oder yaml file
 
-targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["data-sets/{}_{}_{}/interactions.links".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
+targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["data-sets/{}_{}_{}/interactions.links".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["data-sets/{}_{}_{}/go_and_kegg.memberships".format(experiment, fdr, network) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
 
 
 #debug
@@ -128,7 +128,7 @@ rule enrich:
 
 rule eXamine_nodes:
     input: "scores/{experiment}_{FDR}_{network}_module.res"
-    output: "data-sets/{experiment}_{FDR}_{network}/modules.links",
+    output: "data-sets/{experiment}_{FDR}_{network}/modules.memberships",
         "data-sets/{experiment}_{FDR}_{network}/proteins.nodes",
         "data-sets/{experiment}_{FDR}_{network}/modules.annotations"
     shell: "python scripts/proteins.py -m {input} -ol {output[0]} -on {output[1]} -om {output[2]}"
@@ -139,6 +139,17 @@ rule eXamine_interactions:
     output: "data-sets/{experiment}_{FDR}_{network}/interactions.links"
     shell:
         "python scripts/interactions.py -e {input[0]} -n {input[1]} -o {output}"
+
+rule eXamine_sets:
+    input:
+        "GO/GO_biomart.txt",
+        "data-sets/{experiment}_{FDR}_{network}/proteins.nodes",
+        "scores/{experiment}_{FDR}_{network}_sets.exm",
+    output:
+        "data-sets/{experiment}_{FDR}_{network}/go_and_kegg.annotations",
+        "data-sets/{experiment}_{FDR}_{network}/go_and_kegg.memberships"
+    shell:
+        "python scripts/go_modules.py  -g {input[0]} -n {input[1]} -s {input[2]} -oa {output[0]} -ol {output[1]}"
 
 
 rule merge_heinz_deseq2:

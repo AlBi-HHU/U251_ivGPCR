@@ -1,5 +1,5 @@
 experiments:
-  - untreated_vs_stimulated
+  #- untreated_vs_stimulated
   - stimulated_vs_US28
 #  - stimulated_vs_UL33
 
@@ -10,13 +10,13 @@ networks:
 
 FDRs:
   HPRD:
-    untreated_vs_stimulated:
-      - 0.5 # HPRD
+    #untreated_vs_stimulated:
+      #- 0.05 # empty module --> nothing to visualize
     stimulated_vs_US28:
-      - 1e-75
+      #- 1e-75
       #- 1e-100
-      #- 1e-150
-      #- 1e-175
+      - 1e-150
+      - 1e-175
     #stimulated_vs_UL33:
       #- 1e-25
       #- 1e-50
