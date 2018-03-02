@@ -135,9 +135,10 @@ rule eXamine_nodes:
 
 rule eXamine_interactions:
     input: lambda wildcards: os.path.join("networks", config["networks"][wildcards.network]),
+        "data-sets/{experiment}_{FDR}_{network}/proteins.nodes"
     output: "data-sets/{experiment}_{FDR}_{network}/interactions.links"
     shell:
-        "python scripts/interactions.py -e {network} -o {output}"
+        "python scripts/interactions.py -e {input[0]} -n {input[1]} -o {output}"
 
 
 rule merge_heinz_deseq2:

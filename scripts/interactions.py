@@ -9,7 +9,8 @@ if not os.path.exists("eXamine"):
 
 parser = argparse.ArgumentParser(description = 'Creates a list of the edges')
 parser.add_argument('-e', type = str, help = 'name of (complete) edge file 9606.protein.links.v10.HGNC.txt', required = True)
-parser.add_argument('-o', type = str, help = 'output directory', required = True)
+parser.add_argument('-n', type = str, help = 'proteins.nodes file', required = True)
+parser.add_argument('-o', type = str, help = 'output file', required = True)
 
 try:
     args = parser.parse_args()
@@ -18,13 +19,13 @@ except IOError:
 
 proteins = []
 
-with open(os.path.join('eXamine', args.o, 'proteins.nodes'), 'rt') as nodes:
+with open(args.n, 'rt') as nodes:
     reader = csv.DictReader(nodes, delimiter='\t')
     for row in reader:
         proteins.append(row['Identifier'])
 
 
-with open(os.path.join('eXamine', args.o, 'interactions.links'), 'wt') as output:
+with open(args.o, 'wt') as output:
     writer = csv.writer(output, delimiter = '\t')
     with open(args.e, 'rt') as interactome:
         reader = csv.reader(interactome, delimiter='\t')
