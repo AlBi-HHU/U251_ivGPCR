@@ -22,7 +22,6 @@ with open(args.n, 'rt') as nodes:
     for row in reader:
         proteins.append(row['Identifier'])
 
-
 with open(args.o, 'wt') as output:
     writer = csv.writer(output, delimiter = '\t')
     with open(args.e, 'rt') as interactome:
