@@ -4,7 +4,7 @@ targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, fdr, network)
 
 
 #debug
-print(targets)
+#print(targets)
 
 wildcard_constraints:
     experiment = '\w+_vs_\w+'
@@ -168,6 +168,15 @@ rule filter_STRING:
         "networks/9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
     shell:
         "sed '/UBC/d' {input} > {output}"
+
+rule filter_IREF:
+    input:
+        "networks/irefindex14+kegg09.txt"
+    output:
+        "networks/irefindex14+kegg09.txt_no_UBC.txt"
+    shell:
+        "sed '/UBC/d' {input} > {output}"
+
 
 # rule getGO:
 #     input:

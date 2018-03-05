@@ -5,8 +5,8 @@ experiments:
 
 networks:
   HPRD: "HPRD_Release9_062910_Heinz.txt"
-#  STRING: "9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
-#  IREFKEGG: "irefindex14+kegg09.txt"
+  STRING: "9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
+  IREFKEGG: "irefindex14+kegg09.txt_no_UBC.txt"
 
 FDRs:
   HPRD:
@@ -22,24 +22,25 @@ FDRs:
       #- 1e-50
       #- 1e-65
       #- 1e-70
-  #STRING:
+  STRING:
     #untreated_vs_stimulated:
       # - 0.25
-    #stimulated_vs_US28:
+    stimulated_vs_US28:
       #- 1e-75
       #- 1e-100
-      #- 1e-150
-      #- 1e-175
+      - 1e-150
+      - 1e-175
     #stimulated_vs_UL33:
       #- 1e-30
       #- 1e-50
       #- 1e-65
       #- 1e-70
-  #IREFKEGG:
+  IREFKEGG:
     #untreated_vs_stimulated:
       #- 0.25
-    #stimulated_vs_US28:
-      #- 1e-75
+    stimulated_vs_US28:
+      - 1e-75
+      - 1e-150
     #stimulated_vs_UL33:
       #- 1e-75
 
