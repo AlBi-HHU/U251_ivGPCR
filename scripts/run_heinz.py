@@ -30,7 +30,8 @@ subprocess_heinz = ["heinz",
                     "-e", fullnetwork,
                     #"-e", "networks/HPRD_Release9_062910_Heinz.txt",
                     #"-e", "networks/9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt",
-                    "-o", "scores/{}_{}_{}_module.txt".format(experiment, FDR, network),
+                    "-o", "scores/{}_{}_{}_module.txt".format(experiment, network, FDR),
+                    #"-r", "STAT3",
                     "-v", '0']
 
                     # ">", "scores/{}_{}_module.dot".format(experiment, FDR)]
@@ -40,7 +41,7 @@ logger.info('Running Heinz on {} with FDR {} and network {}...'.format(experimen
 #print(" ".join(subprocess_heinz))
 
 
-dotfile = open("scores/{}_{}_{}_module.dot".format(experiment, FDR, network), 'w')
+dotfile = open("scores/{}_{}_{}_module.dot".format(experiment, network, FDR), 'w')
 p = subprocess.run(subprocess_heinz, stdout=dotfile)
-subprocess.call("grep -v NaN scores/{}_{}_{}_module.txt | grep -v \"#\" > scores/{}_{}_{}_module.mod".format(experiment, FDR, network, experiment, FDR, network), shell=True)
-subprocess.call("neato -Tpdf scores/{}_{}_{}_module.dot -o scores/{}_{}_{}_module.pdf".format(experiment, FDR, network, experiment, FDR, network), shell=True)
+subprocess.call("grep -v NaN scores/{}_{}_{}_module.txt | grep -v \"#\" > scores/{}_{}_{}_module.mod".format(experiment, network, FDR, experiment, network, FDR), shell=True)
+subprocess.call("neato -Tpdf scores/{}_{}_{}_module.dot -o scores/{}_{}_{}_module.pdf".format(experiment, network, FDR, experiment, network, FDR), shell=True)
