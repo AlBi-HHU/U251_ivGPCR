@@ -17,10 +17,10 @@ Reproducible pipeline of the experiments described in the mnauscript "..."
   * up to date?
 * start w/raw data?
 * Is Johannes' analysis in? 
-* KEGG pathway enrichment
+* KEGG pathway enrichment -- discuss background. rule needs condas scipy, pandas
 * Fehler in snakemake (von Hand geht es...)
 * multiple modules
 * root at STAT3
 * differences between modules? Venn diagram or cooler?
 * Was ist mit downloads (biomart, KEGG, ...). Wie macht man das ordentlich reproducible?
-
+* How to distribute eXamine so that it runs?
