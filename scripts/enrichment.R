@@ -36,7 +36,7 @@ names(geneList) <- geneNames
 
 GOdata <- new("topGOdata", ontology = go_domain, allGenes = geneList, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
-results <- runTest(GOdata,algorithm="classic",statistic="fisher")
+results <- runTest(GOdata,algorithm="classic",statistic="globaltest")
 table <- GenTable(GOdata, classicFisher=results,topNodes=20)
 
 
