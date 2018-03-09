@@ -50,7 +50,7 @@ Setup Bioconda with
     conda config --add channels conda-forge
     conda config --add channels bioconda
 
-### Step 3: Install bioconda-utils and Snakmake
+### Step 3: Install bioconda-utils and Snakemake
 
 Install bioconda-utils and Snakemake >=4.6.0 with
 
@@ -62,12 +62,12 @@ If you already have an older version of Snakemake, please make sure it is update
 
 First, create a working directory:
 
-    mkdir bioconda-workflow
-    cd bioconda-workflow
+    mkdir u251-ivgpcr-workflow
+    cd u251-ivgpcr-workflow
 
 Then, download the workflow archive from TODO and unpack it with
 
-    tar -xf bioconda-paper-workflow.tar.gz
+    tar -xf u251-ivgpcr-workflow.tar.gz
 
 ### Step 5: Run the workflow
 
@@ -76,7 +76,7 @@ Execute the analysis workflow with Snakemake
     snakemake --use-conda
 
 Please wait a few minutes for the analysis to finish.
-Results can be found in the folder `figs/`.
+
 If you have been running the workflow in the docker container (see above),
 you can obtain the results with
 
