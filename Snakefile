@@ -183,7 +183,7 @@ rule filter_IREF:
 
 rule plot_stripchart:
     input:
-        normcounts="deseq2/{experiment}_normcounts.txt"
+        normcounts="deseq2/{experiment}_deseq2_normalized_counts.txt"
     output:
         "plots/{experiment}_top{n}_stripchart.pdf"
     conda:
