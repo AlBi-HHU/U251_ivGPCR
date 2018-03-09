@@ -15,15 +15,11 @@ rule all:
 rule biomart:
     output:
         "GO/GO_biomart.txt"
-    run:
-        import time
-        excep = True
-        while excep:
-            try:
-                shell("Rscript scripts/getGO.R > {output}")
-                excep = False
-            except Exception:
-                time.sleep(5)
+    conda:
+        "envs/go.yaml"
+    script:
+        "scripts/getGO.R"
+
 
 rule all_go_uniq:
 # Make a list of unique GO terms
