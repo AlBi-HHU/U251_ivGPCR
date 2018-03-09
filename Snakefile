@@ -43,6 +43,8 @@ rule ancestors:
         "GO/all_go_uniq.txt"
     output:
         "GO/all_go_uniq_ancestors.txt"
+    conda:
+        "envs/go.yaml"
     shell:
         "Rscript scripts/getAncestors.R {input} | sort -u > {output}"
 
@@ -54,13 +56,17 @@ rule topGO:
         "GO/all_go_uniq_ancestors.txt"
     output:
         "GO/{experiment}_gsymb2go.map"
+    conda:
+        "envs/python.yaml"
     shell:
         "python scripts/mappingTopGO.py {input} > {output}"
 
 
 rule counts:
-    input: "CountTable_RNA_seq_U251_ivGPCR.xlsx"
-    output: expand("count_files/{experiment}.txt", experiment=config["experiments"])
+    input:
+        "CountTable_RNA_seq_U251_ivGPCR.xlsx"
+    output:
+        expand("count_files/{experiment}.txt", experiment=config["experiments"])
     conda:
       "envs/python.yaml"
     script: "./scripts/xls_to_count_file.py"
@@ -106,9 +112,13 @@ rule run_heinz:
 #     shell: "grep -v NaN {input} | grep -v \"#\" > {output}"
 
 rule merge:
-    input: "scores/{experiment}_pvals.txt",
+    input:
+        "scores/{experiment}_pvals.txt",
         full_module="scores/{experiment}_{network}_{FDR}_module.txt"
-    output: "scores/{experiment}_{network}_{FDR}_nodes.exm"
+    output:
+        "scores/{experiment}_{network}_{FDR}_nodes.exm"
+    conda:
+        "envs/python.yaml"
     shell:
         "python scripts/merge.py {input[0]} {input[1]} GO/GO_biomart.txt GO/all_go_uniq_ancestors.txt > {output}"
 
@@ -118,7 +128,9 @@ rule enrich:
     output: "scores/{experiment}_{network}_{FDR}_sets.exm",
         temp("tmp/{experiment}_{network}_{FDR}_enr_GO_P.txt"),
         temp("tmp/{experiment}_{network}_{FDR}_enr_GO_F.txt"),
-        temp("tmp/{experiment}_{network}_{FDR}_enr_GO_C.txt"),
+        temp("tmp/{experiment}_{network}_{FDR}_enr_GO_C.txt")
+    conda:
+        "envs/topgo.yaml"
     shell:
         """
         Rscript scripts/enrichment.R {input[0]} {input[1]} BP {output[1]}
@@ -130,16 +142,25 @@ rule enrich:
         """
 
 rule eXamine_nodes:
-    input: "scores/{experiment}_{network}_{FDR}_module.mod"
-    output: "data-sets/{experiment}_{network}_{FDR}/modules.memberships",
+    input:
+        "scores/{experiment}_{network}_{FDR}_module.mod"
+    output:
+        "data-sets/{experiment}_{network}_{FDR}/modules.memberships",
         "data-sets/{experiment}_{network}_{FDR}/proteins.nodes",
         "data-sets/{experiment}_{network}_{FDR}/modules.annotations"
-    shell: "python scripts/proteins.py -m {input} -ol {output[0]} -on {output[1]} -om {output[2]}"
+    conda:
+        "envs/python.yaml"
+    shell:
+        "python scripts/proteins.py -m {input} -ol {output[0]} -on {output[1]} -om {output[2]}"
 
 rule eXamine_interactions:
-    input: lambda wildcards: os.path.join("networks", config["networks"][wildcards.network]),
+    input:
+        lambda wildcards: os.path.join("networks", config["networks"][wildcards.network]),
         "data-sets/{experiment}_{network}_{FDR}/proteins.nodes"
-    output: "data-sets/{experiment}_{network}_{FDR}/interactions.links"
+    output:
+        "data-sets/{experiment}_{network}_{FDR}/interactions.links"
+    conda:
+        "envs/python.yaml"
     shell:
         "python scripts/interactions.py -e {input[0]} -n {input[1]} -o {output}"
 
@@ -151,6 +172,8 @@ rule eXamine_sets:
     output:
         "data-sets/{experiment}_{network}_{FDR}/go_and_kegg.annotations",
         "data-sets/{experiment}_{network}_{FDR}/go_and_kegg.memberships"
+    conda:
+        "envs/python.yaml"
     shell:
         "python scripts/go_modules.py  -g {input[0]} -n {input[1]} -s {input[2]} -oa {output[0]} -ol {output[1]}"
 
@@ -161,6 +184,8 @@ rule merge_heinz_deseq2:
         deseq2_out = "deseq2/{experiment}_deseq2.txt"
     output:
         merge_res = "scores/{experiment}_{network}_{FDR}_module_fc_pval.txt"
+    conda:
+        "envs/python.yaml"
     shell:
         "touch {output}; scripts/merge_mod_deseq.py -m {input[0]} -d {input[1]} -o {output}"
 
