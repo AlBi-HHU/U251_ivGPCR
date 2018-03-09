@@ -15,10 +15,18 @@ geneListFilename <- args[2]
 go_domain <- args[3]
 output <- args[4]
 
+output.colnames <- c("ID", "P-value", "Label")
+
 geneID2GO <- readMappings(mappingFilename)
 geneNames <- names(geneID2GO)
 
 if(file.size(geneListFilename) == 0) {
+    empty <- data.frame(character(),
+                        character(),
+                        character(),
+                        stringsAsFactors=FALSE)
+    colnames(empty) <- output.colnames
+    write.table(empty, file = output, row.names = FALSE, quote = FALSE, sep = '\t')
     quit(save = "no")
 }
 
@@ -38,4 +46,4 @@ head(table,n=10)
 #write.table(table2, file=output, col.names = FALSE, row.names = FALSE, quote = FALSE, sep = '\t')
 
 table2 <- cbind(table$GO.ID, table$classicFisher, table$Term) #, table$Annotated, table$Significant, table$Expected
-write.table(table2, file=output, col.names = c("ID", "P-value", "Label"), row.names = FALSE, quote = FALSE, sep = '\t')
+write.table(table2, file=output, col.names = output.colnames, row.names = FALSE, quote = FALSE, sep = '\t')
