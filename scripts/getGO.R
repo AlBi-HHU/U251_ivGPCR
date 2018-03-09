@@ -7,7 +7,7 @@ if(!require(biomaRt)){
 }
 
 suppressMessages(library(biomaRt))
-mart_hsa <- useMart(biomart = "ensembl", dataset="hsapiens_gene_ensembl", version = snakemake@config[["ENSEMBL"]][["version"]])
+mart_hsa <- useMart(biomart = "ensembl", dataset="hsapiens_gene_ensembl", version = snakemake@params[["version"]])
 go = getBM(attributes=c('hgnc_symbol','go_id','go_linkage_type','namespace_1003','name_1006','definition_1006'),filters='', mart=mart_hsa)
 
 #go = getBM(attributes=c('hgnc_symbol','go_id'),filters='',values = '', mart=mart_hsa)

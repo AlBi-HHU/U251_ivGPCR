@@ -1,6 +1,7 @@
 configfile: "config.yaml" # json oder yaml file
 
 targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["data-sets/{}_{}_{}/interactions.links".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["data-sets/{}_{}_{}/go_and_kegg.memberships".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
+target_stripcharts = expand("plots/{experiment}_top{n}_stripchart.pdf", experiment=config["experiments"], n=20)
 
 
 #debug
@@ -10,13 +11,19 @@ wildcard_constraints:
     experiment = '\w+_vs_\w+'
 
 rule all:
-    input: targets, "GO/all_go_uniq_ancestors.txt"#, "GO/all_go_uniq_ancestors.txt"
+    input:
+        targets,
+        "GO/all_go_uniq_ancestors.txt", #, "GO/all_go_uniq_ancestors.txt"
+        target_stripcharts
+
 
 rule biomart:
     output:
         "GO/GO_biomart.txt"
     conda:
         "envs/go.yaml"
+    params:
+        version=config["ENSEMBL"]["version"]
     script:
         "scripts/getGO.R"
 
@@ -173,6 +180,16 @@ rule filter_IREF:
     shell:
         "sed '/UBC/d' {input} > {output}"
 
+
+rule plot_stripchart:
+    input:
+        normcounts="deseq2/{experiment}_normcounts.txt"
+    output:
+        "plots/{experiment}_top{n}_stripchart.pdf"
+    conda:
+        "envs/python.yaml"
+    script:
+        "scripts/plot-stripchart.py"
 
 # rule getGO:
 #     input:
