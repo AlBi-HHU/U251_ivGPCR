@@ -1,0 +1,8 @@
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - r-base =3.4.1
+  - bioconductor-biomart = 2.34.0
+  - bioconductor-go.db = 3.5.0
