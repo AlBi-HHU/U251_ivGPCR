@@ -18,6 +18,10 @@ output <- args[4]
 geneID2GO <- readMappings(mappingFilename)
 geneNames <- names(geneID2GO)
 
+if(file.size(geneListFilename) == 0) {
+    quit(save = "no")
+}
+
 myInterestingGenes <- as.character(read.delim(geneListFilename, header=FALSE)$V1)
 geneList <- factor(as.integer(geneNames %in% myInterestingGenes))
 names(geneList) <- geneNames
