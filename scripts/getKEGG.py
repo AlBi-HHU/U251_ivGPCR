@@ -21,6 +21,7 @@ for i, p in enumerate(human_pathways.rstrip().split("\n")):
     description[p_entry] = p_description
     #print(p_entry, p_description)
     pathway_file = REST.kegg_get(p_entry).read()
+    #import pdb; pdb.set_trace()
     # iterate through each KEGG pathway file, keeping track of which section
     # of the file we're in, only read the gene in each pathway
     current_section = None
@@ -43,6 +44,3 @@ for i, p in enumerate(human_pathways.rstrip().split("\n")):
     #print(p_entry, genes[p_entry])
 
 df.to_csv('KEGG_pathways.csv')
-    
-    
-
