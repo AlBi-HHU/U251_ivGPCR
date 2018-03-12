@@ -8,3 +8,5 @@ dependencies:
   - xlrd =1.0.0
   - matplotlib
   - seaborn
+  - scipy
+  - statsmodels

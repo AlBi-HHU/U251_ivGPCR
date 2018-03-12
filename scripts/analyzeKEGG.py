@@ -3,6 +3,7 @@ import argparse
 import os
 import pandas as pd
 import scipy.stats as stats
+import statsmodels.stats.multitest as smp
 
 parser = argparse.ArgumentParser(description = 'Computes KEGG pathway enrichment')
 parser.add_argument('-m', type = str, help = 'module file', required=True)
@@ -26,7 +27,7 @@ with open(args.b, 'rt') as nodes:
     for line in nodes:
         if not line.startswith('#'): background.add(line.split()[0])
 
-df = pd.read_csv('KEGG/KEGG_pathways.csv')
+df = pd.read_csv('KEGG_pathways.csv')
 
 P = pd.DataFrame(columns = ['p', 'ID', 'description', 'genes']) # pathways enriched in module
 
@@ -47,18 +48,23 @@ for index, row in df.iterrows():
 
     #print(pvalue, module_pathway, module_non_pathway, non_module_pathway, non_module_non_pathway, row['description'])
 
-P = P.sort_values(by=['p'])
+pvals = list(P['p'])
+rej, pcorr = smp.multipletests(pvals, alpha=0.05, method='bonferroni', is_sorted=False, returnsorted=False)[:2]
+#print(pvals, pcorr)
+P['p_corr'] = pcorr
+
+P = P.sort_values(by=['p_corr'])
 
 with open (args.ao, 'at') as annotation:
     i = 0
     for index, row in P.iterrows():
-        if i >= 30: break # only max. 30 pathways
-        annotation.write(row['ID'] + "\tKEGG Pathway\t" + str(row['p']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+        if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
+        annotation.write(row['ID'] + "\tKEGG Pathway\t" + str(row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         i = i + 1
 
 with open (args.mo, 'at') as memberships:
     i = 0
     for index, row in P.iterrows():
-        if i >= 30: break # only max. 30 pathways
+        if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
         memberships.write(row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
         i = i + 1
