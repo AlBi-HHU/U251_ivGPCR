@@ -31,7 +31,7 @@ subprocess_heinz = ["heinz",
                     #"-e", "networks/HPRD_Release9_062910_Heinz.txt",
                     #"-e", "networks/9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt",
                     "-o", "scores/{}_{}_{}_module.txt".format(experiment, network, FDR),
-                    #"-r", "STAT3",
+                    #"-r", "TP53",
                     "-v", '0']
 
                     # ">", "scores/{}_{}_module.dot".format(experiment, FDR)]
