@@ -43,4 +43,4 @@ for i, p in enumerate(human_pathways.rstrip().split("\n")):
     df.at[i, 'genes'] = genelist
     #print(p_entry, genes[p_entry])
 
-df.to_csv('KEGG_pathways.csv')
+df.to_csv('KEGG/KEGG_pathways.csv')

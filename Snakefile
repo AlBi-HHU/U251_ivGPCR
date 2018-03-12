@@ -14,6 +14,7 @@ rule all:
     input:
         targets,
         "GO/all_go_uniq_ancestors.txt", #, "GO/all_go_uniq_ancestors.txt"
+        "KEGG/KEGG_pathways.csv",
         target_stripcharts
 
 
@@ -22,10 +23,18 @@ rule biomart:
         "GO/GO_biomart.txt"
     conda:
         "envs/go.yaml"
-    params:
-        version=config["ENSEMBL"]["version"]
+    #params:
+    #    version=config["ENSEMBL"]["version"]
     script:
         "scripts/getGO.R"
+
+rule getKEGG:
+    output:
+        "KEGG/KEGG_pathways.csv"
+    conda:
+        "envs/python.yaml"
+    script:
+        "scripts/getKEGG.py"
 
 
 rule all_go_uniq:
@@ -178,6 +187,8 @@ rule eXamine_sets:
         "python scripts/go_modules.py  -g {input[0]} -n {input[1]} -s {input[2]} -oa {output[0]} -ol {output[1]}"
 
 
+
+
 rule merge_heinz_deseq2:
     input:
         module = "scores/{experiment}_{network}_{FDR}_module.mod",
@@ -215,50 +226,3 @@ rule plot_stripchart:
         "envs/python.yaml"
     script:
         "scripts/plot-stripchart.py"
-
-# rule getGO:
-#     input:
-#     output: "GO/GO-biomart.txt"
-#     conda: "envs/GO.yaml"
-#     script:
-#         "scripts/getGO.R"
-#
-# rule getGOancestors:
-#     input: "GO/GO-biomart.txt"
-#     output: "GO/all_go_uniq_ancestors.txt"
-#     conda: "envs/GO.yaml"
-#     shell: "Rscript scripts/getAncestors.R {input} > {output}"
-#
-# rule topGO:
-#     input:
-#         "GO/GO-biomart.txt",
-#         "scores/{experiment}_pvals.txt",
-#         "GO/all_go_uniq_ancestors.txt"
-#     output:
-#         "GO/{experiment}_gsymb2go.map"
-#     script:
-#         "scripts/mappingTopGO.py"
-#
-# rule merge:
-#     input:
-#         "scores/{experiment}_pvals.txt",
-#         "scores/{experiment}_{network}_{FDR}_module.txt",
-#         #"GO/GO-biomart.txt",
-#         #"GO/all_go_uniq_ancestors.txt"
-#     output:
-#         "eXamine/{experiment}_{network}_{FDR}_nodes.txt"
-#     script:
-#         "scripts/merge.py"
-
-#         # <INPUT_FILE_PVAL> <INPUT_FILE_MODULE> <INPUT_GO_FILE> <INPUT_GO_ANCESTOR> <OUTPUT_FILE_NAME>
-#
-# # rule merge:
-# #     input:
-# #         "scores/stimulated_vs_US28_pvals.txt",
-# #         "scores/stimulated_vs_US28_1e-175_STRING_module.txt",
-# #         "GO/GO-biomart.txt",
-# #         "GO/all_go_uniq_ancestors.txt"
-# #     output:
-# #         "eXamine/stimulated_vs_US28_1e-175_STRING_nodes.txt"
-# #     script:
-# #         "scripts/merge.py"

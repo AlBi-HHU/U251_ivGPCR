@@ -8,8 +8,8 @@ networks:
   STRING: "9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
   IREFKEGG: "irefindex14+kegg09.txt_no_UBC.txt"
 
-ENSEMBL:
-  version: 91
+#ENSEMBL:
+#  version: "GRCh38.p10"
 
 FDRs:
   HPRD:
