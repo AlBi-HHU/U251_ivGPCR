@@ -110,6 +110,12 @@ whith `<container-id>` being the ID of the container.
 
       conda install -f snakemake
 
+## Remarks regarding reproducibility
+
+GO terms and KEGG pathways are snapshots from March 2018. They can be replaced by new, udated versions by deleting the corresponding files in the `GO/` and `KEGG/` subdirectories. Note, however, that the results of the enrichment process may change.
+
+same holds vor heinz.
+
 ## TODO
 
 * Write this README

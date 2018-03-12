@@ -26,7 +26,7 @@ with open(args.b, 'rt') as nodes:
     for line in nodes:
         if not line.startswith('#'): background.add(line.split()[0])
 
-df = pd.read_csv('KEGG_pathways.csv')
+df = pd.read_csv('KEGG/KEGG_pathways.csv')
 
 P = pd.DataFrame(columns = ['p', 'ID', 'description', 'genes']) # pathways enriched in module
 
@@ -53,7 +53,7 @@ with open (args.ao, 'at') as annotation:
     i = 0
     for index, row in P.iterrows():
         if i >= 30: break # only max. 30 pathways
-        annotation.write(row['ID'] + "\tpathway\t" + str(row['p']) + "\t" + row['description'] + "\n")
+        annotation.write(row['ID'] + "\tKEGG Pathway\t" + str(row['p']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         i = i + 1
 
 with open (args.mo, 'at') as memberships:

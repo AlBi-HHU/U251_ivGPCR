@@ -178,16 +178,19 @@ rule eXamine_sets:
         "GO/GO_biomart.txt",
         "data-sets/{experiment}_{network}_{FDR}/proteins.nodes",
         "scores/{experiment}_{network}_{FDR}_sets.exm",
+        "KEGG/KEGG_pathways.csv",
+        "scores/{experiment}_{network}_{FDR}_module.mod",
+        "scores/{experiment}_{network}_{FDR}_module.txt"
     output:
         "data-sets/{experiment}_{network}_{FDR}/go_and_kegg.annotations",
         "data-sets/{experiment}_{network}_{FDR}/go_and_kegg.memberships"
     conda:
         "envs/python.yaml"
     shell:
-        "python scripts/go_modules.py  -g {input[0]} -n {input[1]} -s {input[2]} -oa {output[0]} -ol {output[1]}"
-
-
-
+        """
+        python scripts/go_modules.py  -g {input[0]} -n {input[1]} -s {input[2]} -oa {output[0]} -ol {output[1]}
+        python scripts/analyzeKEGG.py -m {input[4]} -b {input[5]} -ao {output[0]} -mo {output[1]}
+        """
 
 rule merge_heinz_deseq2:
     input:
@@ -215,7 +218,6 @@ rule filter_IREF:
         "networks/irefindex14+kegg09.txt_no_UBC.txt"
     shell:
         "sed '/UBC/d' {input} > {output}"
-
 
 rule plot_stripchart:
     input:
