@@ -55,14 +55,14 @@ P['p_corr'] = pcorr
 
 P = P.sort_values(by=['p_corr'])
 
-with open (args.ao, 'wt') as annotation:
+with open (args.ao, 'at') as annotation:
     i = 0
     for index, row in P.iterrows():
         if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
         annotation.write(row['ID'] + "\tKEGG Pathway\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         i = i + 1
-        
-with open (args.mo, 'wt') as memberships:
+
+with open (args.mo, 'at') as memberships:
     i = 0
     for index, row in P.iterrows():
         if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
