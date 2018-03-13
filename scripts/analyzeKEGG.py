@@ -27,7 +27,7 @@ with open(args.b, 'rt') as nodes:
     for line in nodes:
         if not line.startswith('#'): background.add(line.split()[0])
 
-df = pd.read_csv('KEGG_pathways.csv')
+df = pd.read_csv('KEGG/KEGG_pathways.csv')
 
 P = pd.DataFrame(columns = ['p', 'ID', 'description', 'genes']) # pathways enriched in module
 
@@ -55,14 +55,14 @@ P['p_corr'] = pcorr
 
 P = P.sort_values(by=['p_corr'])
 
-with open (args.ao, 'at') as annotation:
+with open (args.ao, 'wt') as annotation:
     i = 0
     for index, row in P.iterrows():
         if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
-        annotation.write(row['ID'] + "\tKEGG Pathway\t" + str(row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+        annotation.write(row['ID'] + "\tKEGG Pathway\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         i = i + 1
-
-with open (args.mo, 'at') as memberships:
+        
+with open (args.mo, 'wt') as memberships:
     i = 0
     for index, row in P.iterrows():
         if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
