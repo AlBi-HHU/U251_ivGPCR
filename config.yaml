@@ -16,8 +16,8 @@ FDRs:
     # untreated_vs_stimulated:
     #   - 0.05 # empty module --> nothing to visualize
     stimulated_vs_US28:
-      - 1 # I want a maximal module to check the enrichment
-      - 1e-10
+      #- 1 # I want a maximal module to check the enrichment
+      #- 1e-10
       - 1e-75
       #- 1e-100
       - 1e-150
