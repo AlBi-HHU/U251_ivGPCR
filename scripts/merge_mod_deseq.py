@@ -32,6 +32,7 @@ if __name__ == '__main__':
         # draw = sum(merged_results['Final IC'] == merged_results['IC'].round(2))
         # print win_rev, draw, win_sup
         #
+        #merged_results.rename(columns = {'1': 'sds'}, inplace=True)
         merged_results[['log2FoldChange', 'padj']].to_csv(args.output, sep='\t')
     except:
         print("merging heinz with deseq2 failed")

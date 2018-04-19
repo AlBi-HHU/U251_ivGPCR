@@ -54,7 +54,7 @@ with open(args.g, 'rt') as go_file:
 
 
 with open(args.oa, 'wt') as ann_output:
-    header = ['Identifier', 'Category', 'Score', 'Symbol', 'URL']
+    header = ['Identifier', 'Category', 'Score : Number', 'Symbol', 'URL : Href']
     writer = csv.DictWriter(ann_output, delimiter='\t', fieldnames = header)
     entry = {}
     writer.writeheader()
@@ -62,9 +62,9 @@ with open(args.oa, 'wt') as ann_output:
         if len(go_modules[module]) > 0:
             entry['Identifier'] = module
             entry['Category'] = annotation[0]
-            entry['Score'] = annotation[1].replace('< ', '')
+            entry['Score : Number'] = annotation[1].replace('< ', '')
             entry['Symbol'] = annotation[2]
-            entry['URL'] = 'http://amigo.geneontology.org/cgi-bin/amigo/term_details?term='+ module
+            entry['URL : Href'] = 'http://amigo.geneontology.org/cgi-bin/amigo/term_details?term='+ module
             writer.writerow(entry)
 
 with open(args.ol, 'wt') as output:

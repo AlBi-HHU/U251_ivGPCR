@@ -1,11 +1,14 @@
 configfile: "config.yaml" # json oder yaml file
 
 targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["data-sets/{}_{}_{}/interactions.links".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["data-sets/{}_{}_{}/go_and_kegg.memberships".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
+
+target_modules = ["scores/{}_{}_{}_module_{}.txt".format(experiment, network, fdr, i) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment] for i in range(1) ]
+
 target_stripcharts = expand("plots/{experiment}_top{n}_stripchart.pdf", experiment=config["experiments"], n=20)
 
 
 #debug
-#print(targets)
+#print(target_modules)
 
 wildcard_constraints:
     experiment = '\w+_vs_\w+'
@@ -13,6 +16,7 @@ wildcard_constraints:
 rule all:
     input:
         targets,
+#        target_modules,
         "GO/all_go_uniq_ancestors.txt", #, "GO/all_go_uniq_ancestors.txt"
         "KEGG/KEGG_pathways.csv",
         target_stripcharts
@@ -104,21 +108,29 @@ rule fit_BUM:
     script:
         "scripts/fitBUM.R"
 
+
+# rule get_workingcopy_network:
+#     input: network=snakemake.wildcards.network
+#     output: "scores/{experiment}_{network}_{FDR}_network.txt"
+#     shell:
+#         "cp {input} {output}"
+
 rule run_heinz:
     input:
         pvals="scores/{experiment}_pvals.txt",
-        bum_params="scores/{experiment}_bum_fit.txt"
+        bum_params="scores/{experiment}_bum_fit.txt",
+        #network = "scores/{experiment}_{network}_{FDR}_network.txt"
     output:
         "scores/{experiment}_{network}_{FDR}_module.txt",
         "scores/{experiment}_{network}_{FDR}_module.mod",
         "scores/{experiment}_{network}_{FDR}_module.pdf"
+        # "scores/{experiment}_{network}_{FDR}_module_0.txt",
+        # "scores/{experiment}_{network}_{FDR}_module_0.mod",
+        # "scores/{experiment}_{network}_{FDR}_module_0.pdf"
+    conda:
+        "envs/python.yaml"
     script:
         "scripts/run_heinz.py"
-
-# rule heinz_res:
-#     input: "scores/{experiment}_{network}_{FDR}_module.txt"
-#     output: "scores/{experiment}_{network}_{FDR}_module.res"
-#     shell: "grep -v NaN {input} | grep -v \"#\" > {output}"
 
 rule merge:
     input:
@@ -152,7 +164,8 @@ rule enrich:
 
 rule eXamine_nodes:
     input:
-        "scores/{experiment}_{network}_{FDR}_module.mod"
+        "scores/{experiment}_{network}_{FDR}_module.mod",
+        "scores/{experiment}_{network}_{FDR}_module_fc_pval.txt"
     output:
         "data-sets/{experiment}_{network}_{FDR}/modules.memberships",
         "data-sets/{experiment}_{network}_{FDR}/proteins.nodes",
@@ -160,7 +173,7 @@ rule eXamine_nodes:
     conda:
         "envs/python.yaml"
     shell:
-        "python scripts/proteins.py -m {input} -ol {output[0]} -on {output[1]} -om {output[2]}"
+        "python scripts/proteins.py -m {input[0]} -fc {input[1]} -ol {output[0]} -on {output[1]} -om {output[2]}"
 
 rule eXamine_interactions:
     input:
