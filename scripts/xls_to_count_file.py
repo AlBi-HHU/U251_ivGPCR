@@ -29,17 +29,17 @@ for index, row in df.iterrows():
 	row['U373plusdox1_GATCAG_L001_R1_001.sorted.bam'], row['U373plusdox2_TAGCTT_L001_R1_001.sorted.bam'], row['U373plusdox3_GGCTAC_L001_R1_001.sorted.bam']))
 
 # ------------------ stimulated versus US28 ------------------
-logger.info('Writing file `count_files/stimulated_vs_US28.txt`...')
-stimulated_vs_US28 = open('count_files/stimulated_vs_US28.txt', 'w')
+logger.info('Writing file `count_files/US28_vs_stimulated.txt`...')
+US28_vs_stimulated = open('count_files/US28_vs_stimulated.txt', 'w')
 
-stimulated_vs_US28.write("GeneID\tstimulated_1\tstimulated_2\tstimulated_3\tUS28_1\tUS28_2\tUS28_3\n")
+US28_vs_stimulated.write("GeneID\tstimulated_1\tstimulated_2\tstimulated_3\tUS28_1\tUS28_2\tUS28_3\n")
 for index, row in df.iterrows():
-    stimulated_vs_US28.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % (row['Geneid'], row['U373plusdox1_GATCAG_L001_R1_001.sorted.bam'], row['U373plusdox2_TAGCTT_L001_R1_001.sorted.bam'], row['U373plusdox3_GGCTAC_L001_R1_001.sorted.bam'], row['U373iUS28plusdox1_GTGGCC_L001_R1_001.sorted.bam'], row['U373iUS28plusdox2_GTTTCG_L001_R1_001.sorted.bam'], row['U373iUS28plusdox3_CGTACG_L001_R1_001.sorted.bam']))
+    US28_vs_stimulated.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % (row['Geneid'], row['U373plusdox1_GATCAG_L001_R1_001.sorted.bam'], row['U373plusdox2_TAGCTT_L001_R1_001.sorted.bam'], row['U373plusdox3_GGCTAC_L001_R1_001.sorted.bam'], row['U373iUS28plusdox1_GTGGCC_L001_R1_001.sorted.bam'], row['U373iUS28plusdox2_GTTTCG_L001_R1_001.sorted.bam'], row['U373iUS28plusdox3_CGTACG_L001_R1_001.sorted.bam']))
 
 # ------------------ stimulated versus UL33 ------------------
-logger.info('Writing file `count_files/stimulated_vs_UL33.txt`...')
-stimulated_vs_UL33 = open('count_files/stimulated_vs_UL33.txt', 'w')
+logger.info('Writing file `count_files/UL33_vs_stimulated.txt`...')
+UL33_vs_stimulated = open('count_files/UL33_vs_stimulated.txt', 'w')
 
-stimulated_vs_UL33.write("GeneID\tstimulated_1\tstimulated_2\tstimulated_3\tUL33_1\tUL33_2\tUL33_3\n")
+UL33_vs_stimulated.write("GeneID\tstimulated_1\tstimulated_2\tstimulated_3\tUL33_1\tUL33_2\tUL33_3\n")
 for index, row in df.iterrows():
-    stimulated_vs_UL33.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % (row['Geneid'], row['U373plusdox1_GATCAG_L001_R1_001.sorted.bam'], row['U373plusdox2_TAGCTT_L001_R1_001.sorted.bam'], row['U373plusdox3_GGCTAC_L001_R1_001.sorted.bam'], row['U373iUL33plusdox1_GAGTGG_L001_R1_001.sorted.bam'], row['U373iUL33plusdox2_ACTGAT_L001_R1_001.sorted.bam'], row['U373iUL33plusdox3_ATTCCT_L001_R1_001.sorted.bam']))
+    UL33_vs_stimulated.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % (row['Geneid'], row['U373plusdox1_GATCAG_L001_R1_001.sorted.bam'], row['U373plusdox2_TAGCTT_L001_R1_001.sorted.bam'], row['U373plusdox3_GGCTAC_L001_R1_001.sorted.bam'], row['U373iUL33plusdox1_GAGTGG_L001_R1_001.sorted.bam'], row['U373iUL33plusdox2_ACTGAT_L001_R1_001.sorted.bam'], row['U373iUL33plusdox3_ATTCCT_L001_R1_001.sorted.bam']))
