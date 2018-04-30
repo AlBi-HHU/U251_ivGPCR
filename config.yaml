@@ -1,7 +1,7 @@
 experiments:
   # - untreated_vs_stimulated  -- no need: previous runs show that there are no significant differences
-  - stimulated_vs_US28
-  - stimulated_vs_UL33
+  - US28_vs_stimulated
+  - UL33_vs_stimulated
 
 networks:
   HPRD: "HPRD_Release9_062910_Heinz.txt"
@@ -15,14 +15,14 @@ FDRs:
   HPRD:
     # untreated_vs_stimulated:
     #   - 0.05 # empty module --> nothing to visualize
-    stimulated_vs_US28:
+    US28_vs_stimulated:
       #- 1 # I want a maximal module to check the enrichment
       #- 1e-10
       - 1e-75
       #- 1e-100
       - 1e-150
       - 1e-175
-    stimulated_vs_UL33:
+    UL33_vs_stimulated:
       - 1e-25
       - 1e-50
       - 1e-65
@@ -30,12 +30,12 @@ FDRs:
   STRING:
     # untreated_vs_stimulated:
     #    - 0.25
-    stimulated_vs_US28:
+    US28_vs_stimulated:
       #- 1e-75
       #- 1e-100
       - 1e-150
       - 1e-175
-    stimulated_vs_UL33:
+    UL33_vs_stimulated:
       - 1e-30
       - 1e-50
       - 1e-65
@@ -43,10 +43,10 @@ FDRs:
   IREFKEGG:
     # untreated_vs_stimulated:
     #   - 0.25
-    stimulated_vs_US28:
+    US28_vs_stimulated:
       - 1e-75
       - 1e-150
-    stimulated_vs_UL33:
+    UL33_vs_stimulated:
       - 1e-75
 
 condition_re: "(?P<condition>.+)_[0-9]+"

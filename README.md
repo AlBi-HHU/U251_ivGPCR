@@ -9,6 +9,7 @@ Reproducible pipeline of the experiments described in the manuscript "..."
 
 * Any 64-bit Linux installation with [GLIBC 2.5](http://unix.stackexchange.com/a/120381) or newer (i.e. any Linux distribution that is newer than CentOS 6).
 * working `heinz` executable in your path. Install from [https://github.com/ls-cwi/heinz].
+* To visualize the results: `examine.jar`. Build from [https://github.com/AlBi-HHU/eXamine-stand-alone].
 
 
 ## Usage
