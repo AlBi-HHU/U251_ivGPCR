@@ -29,6 +29,7 @@ rule biomart:
         "envs/go.yaml"
     #params:
     #    version=config["ENSEMBL"]["version"]
+    params: mem_kb=config["biomart"]
     script:
         "scripts/getGO.R"
 
@@ -37,6 +38,7 @@ rule getKEGG:
         "KEGG/KEGG_pathways.csv"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["getKEGG"]
     script:
         "scripts/getKEGG.py"
 
@@ -47,6 +49,7 @@ rule all_go_uniq:
         "GO/GO_biomart.txt"
     output:
         "GO/all_go_uniq.txt"
+    params: mem_kb=config["all_go_uniq"]
     shell:
         "cut -f2,4 {input} | sort -u  > {output}"
 
@@ -58,6 +61,7 @@ rule ancestors:
         "GO/all_go_uniq_ancestors.txt"
     conda:
         "envs/go.yaml"
+    params: mem_kb=config["ancestors"]
     shell:
         "Rscript scripts/getAncestors.R {input} | sort -u > {output}"
 
@@ -71,6 +75,7 @@ rule topGO:
         "GO/{experiment}_gsymb2go.map"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["topGO"]
     shell:
         "python scripts/mappingTopGO.py {input} > {output}"
 
@@ -82,6 +87,7 @@ rule counts:
         expand("count_files/{experiment}.txt", experiment=config["experiments"])
     conda:
       "envs/python.yaml"
+    params: mem_kb=config["counts"]
     script: "./scripts/xls_to_count_file.py"
 
 rule deseq2:
@@ -94,6 +100,7 @@ rule deseq2:
       normcounts="deseq2/{experiment}_deseq2_normalized_counts.txt"
     conda:
       "envs/deseq2.yaml"
+    params: mem_kb=config["deseq2"]
     script:
         "scripts/DESeq2_DEA.R"
 
@@ -105,6 +112,7 @@ rule fit_BUM:
         "scores/{experiment}_bum_fit.txt"
     conda:
         "envs/bionet.yaml"
+    params: mem_kb=config["fit_BUM"]
     script:
         "scripts/fitBUM.R"
 
@@ -127,8 +135,9 @@ rule run_heinz:
         # "scores/{experiment}_{network}_{FDR}_module_0.txt",
         # "scores/{experiment}_{network}_{FDR}_module_0.mod",
         # "scores/{experiment}_{network}_{FDR}_module_0.pdf"
-    conda:
-        "envs/python.yaml"
+    #conda:
+        #"envs/python.yaml"
+    params: mem_kb=config["run_heinz"]
     script:
         "scripts/run_heinz.py"
 
@@ -140,27 +149,77 @@ rule merge:
         "scores/{experiment}_{network}_{FDR}_nodes.exm"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["merge"]
     shell:
         "python scripts/merge.py {input[0]} {input[1]} GO/GO_biomart.txt GO/all_go_uniq_ancestors.txt > {output}"
 
-rule enrich:
-    input: "GO/{experiment}_gsymb2go.map",
+rule module_to_study:
+    input:
         "scores/{experiment}_{network}_{FDR}_module.mod"
-    output: "scores/{experiment}_{network}_{FDR}_sets.exm",
-        temp("tmp/{experiment}_{network}_{FDR}_enr_GO_P.txt"),
-        temp("tmp/{experiment}_{network}_{FDR}_enr_GO_F.txt"),
-        temp("tmp/{experiment}_{network}_{FDR}_enr_GO_C.txt")
-    conda:
-        "envs/topgo.yaml"
+    output:
+        temp("{experiment}_{network}_{FDR}_modulestudy.txt")
+    params: mem_kb=config["networktotxt"]
     shell:
-        """
-        Rscript scripts/enrichment.R {input[0]} {input[1]} BP {output[1]}
-        Rscript scripts/enrichment.R {input[0]} {input[1]} MF {output[2]}
-        Rscript scripts/enrichment.R {input[0]} {input[1]} CC {output[3]}
-        cat {output[1]} > {output[0]}
-        tail -n +2 {output[2]} >> {output[0]}
-        tail -n +2 {output[3]} >> {output[0]}
-        """
+        "python scripts/modtonames.py {input} {output}"
+
+rule HPRDtotxt:
+    input:
+        "networks/HPRD_Release9_062910_Heinz.txt",
+    output:
+        "networks/HPRD_network.txt",
+    params: mem_kb=config["networktotxt"]
+    shell:
+        r"cat {input} | sed  -e 's/\t/\n/g' | sort -u > {output}"
+
+rule IREFKEGGtotxt:
+    input:
+        "networks/irefindex14+kegg09.txt"
+    output:
+        "networks/IREFKEGG_network.txt"
+    params: mem_kb=config["networktotxt"]
+    shell:
+        r"cat {input} | sed  -e 's/\t/\n/g' | sort -u > {output}"
+
+rule STRINGtotxt:
+    input:
+        "networks/9606.protein.links.v10_mapped_geneIDs_700.txt"
+    output:
+        "networks/STRING_network.txt"
+    params: mem_kb=config["networktotxt"]
+    shell:
+        r"cat {input} | sed -e 's/\t/\n/g' | sort -u > {output}"
+
+rule format_map:
+    input:
+        "GO/{experiment}_gsymb2go.map"
+    output:
+        "GO/{experiment}_gsymb2go_goaformat.map"
+    params: mem_kb=config["format_map"]
+    shell:
+        "sed 's/,/;/g' {input} > {output}"
+
+rule goa_to_eXamine:
+    input:
+        "scores/{experiment}_{network}_{FDR}_enrich.txt"
+    output:
+        "scores/{experiment}_{network}_{FDR}_sets.exm"
+    params: mem_kb=config["goa_to_eXamine"]
+    shell:
+        "python scripts/enrich_to_eXamine.py {input} > {output}"
+rule goaenrich:
+    input:
+        "GO/{experiment}_gsymb2go_goaformat.map",
+        "{experiment}_{network}_{FDR}_modulestudy.txt",
+        "networks/STRING_network.txt",
+        "networks/HPRD_network.txt",
+        "networks/IREFKEGG_network.txt"
+    output:
+        "scores/{experiment}_{network}_{FDR}_enrich.txt"
+    conda:
+        "envs/python.yaml"
+    params: mem_kb=config["enrich"]
+    shell:
+        "python scripts/find_enrichment.py {input[1]} networks/{wildcards.network}_network.txt {input[0]} > {output}"
 
 rule eXamine_nodes:
     input:
@@ -172,6 +231,7 @@ rule eXamine_nodes:
         "data-sets/{experiment}_{network}_{FDR}/modules.annotations"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["eXamine_nodes"]
     shell:
         "python scripts/proteins.py -m {input[0]} -fc {input[1]} -ol {output[0]} -on {output[1]} -om {output[2]}"
 
@@ -183,6 +243,7 @@ rule eXamine_interactions:
         "data-sets/{experiment}_{network}_{FDR}/interactions.links"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["eXamine_interactions"]
     shell:
         "python scripts/interactions.py -e {input[0]} -n {input[1]} -o {output}"
 
@@ -199,6 +260,7 @@ rule eXamine_sets:
         "data-sets/{experiment}_{network}_{FDR}/go_and_kegg.memberships"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["eXamine_sets"]
     shell:
         """
         python scripts/go_modules.py  -g {input[0]} -n {input[1]} -s {input[2]} -oa {output[0]} -ol {output[1]}
@@ -213,6 +275,7 @@ rule merge_heinz_deseq2:
         merge_res = "scores/{experiment}_{network}_{FDR}_module_fc_pval.txt"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["merge_heinz_deseq2"]
     shell:
         "touch {output}; scripts/merge_mod_deseq.py -m {input[0]} -d {input[1]} -o {output}"
 
@@ -221,6 +284,7 @@ rule filter_STRING:
         "networks/9606.protein.links.v10_mapped_geneIDs_700.txt"
     output:
         "networks/9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
+    params: mem_kb=config["filters"]
     shell:
         "sed '/UBC/d' {input} > {output}"
 
@@ -229,6 +293,7 @@ rule filter_IREF:
         "networks/irefindex14+kegg09.txt"
     output:
         "networks/irefindex14+kegg09.txt_no_UBC.txt"
+    params: mem_kb=config["filters"]
     shell:
         "sed '/UBC/d' {input} > {output}"
 
@@ -239,5 +304,6 @@ rule plot_stripchart:
         "plots/{experiment}_top{n}_stripchart.pdf"
     conda:
         "envs/python.yaml"
+    params: mem_kb=config["plot_stripchart"]
     script:
         "scripts/plot-stripchart.py"
