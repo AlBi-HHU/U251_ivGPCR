@@ -78,6 +78,8 @@ Execute the analysis workflow with Snakemake
 
 Please wait a few minutes for the analysis to finish.
 
+To speed up the process use the -j flag to run the programm on all cores simultaneously.
+
 If you have been running the workflow in the docker container (see above),
 you can obtain the results with
 
@@ -85,6 +87,10 @@ you can obtain the results with
 
 whith `<container-id>` being the ID of the container.
 
+#### Run workflow on a Cluster with qsub
+
+Can be executes on a Cluster with:
+	"snakemake --cluster "qsub -l mem=[params.mem_kb} -A <Topic>" -j <jobcount> --use-conda --jobscript jobscript.sh --latency-wait 30"
 
 ## Known errors
 
