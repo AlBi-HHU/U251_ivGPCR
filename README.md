@@ -70,7 +70,12 @@ Then, download the workflow archive from TODO and unpack it with
 
     tar -xf u251-ivgpcr-workflow.tar.gz
 
-### Step 5: Run the workflow
+### Step 5: Download go.obo and go-basic.obo
+
+	wget http://purl.obolibrary.org/obo/go.obo
+	wget http://purl.obolibrary.org/obo/go/go-basic.obo
+
+### Step 6: Run the workflow
 
 Execute the analysis workflow with Snakemake
 
