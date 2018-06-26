@@ -6,7 +6,7 @@ def main():
     print("ID\tP-value\tLabel")
     for line in data:
         GO_entry = re.search(r"(GO:[0-9]+)\s+\S+\s+[a-z]\s+([\w, -/]+)\s+[\d//.]+\s+[\d//.]+\s+([\d//.e-]+)",line)
-        if re.search("GO:[0-9]+",line):
+        if GO_entry:
             print(GO_entry.group(1)+"\t",end="")
             print(GO_entry.group(3)+"\t",end="")
             print(GO_entry.group(2)+"\t")
