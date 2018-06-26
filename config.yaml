@@ -153,9 +153,9 @@ merge_heinz_deseq2:
 eXamine_nodes:
       - 800000
 eXamine_interactions:
-      - 800000
+      - 400000000
 eXamine_sets:
-      - 800000
+      - 400000000
 counts:
       - 800000000
 deseq2:
