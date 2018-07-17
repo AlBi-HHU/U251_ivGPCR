@@ -41,7 +41,7 @@ for i in range(1):
 
     logger.info('Running Heinz on {} with FDR {} and network {}, computing module {} ...'.format(experiment, FDR, network, i))
     #logger.info('Running Heinz on {} with FDR={}...'.format(experiment, FDR))
-    #print(" ".join(subprocess_heinz))
+    print(" ".join(subprocess_heinz))
     #dotfile = open("scores/{}_{}_{}_module_{}.dot".format(experiment, network, FDR, i), 'w')
     dotfile = open("scores/{}_{}_{}_module.dot".format(experiment, network, FDR), 'w')
     #errfile = open("/tmp/heinz.err", 'w')
