@@ -219,7 +219,7 @@ rule goaenrich:
         "envs/python.yaml"
     params: mem_kb=config["enrich"]
     shell:
-        "python scripts/find_enrichment.py --pval 1.001 {input[1]} networks/{wildcards.network}_network.txt {input[0]} > {output}"
+        "python scripts/find_enrichment.py --pval 1.001 --no_propagate_counts {input[1]} networks/{wildcards.network}_network.txt {input[0]} > {output}"
 
 rule eXamine_nodes:
     input:
