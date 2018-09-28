@@ -39,13 +39,13 @@ FDRs:
       - 1e-30
       - 1e-50
       - 1e-65
-      - 1e-70
+      #- 1e-70
   IREFKEGG:
     # untreated_vs_stimulated:
     #   - 0.25
     US28_vs_stimulated:
       - 1e-75
-      - 1e-150
+    #- 1e-150
     UL33_vs_stimulated:
       - 1e-75
 

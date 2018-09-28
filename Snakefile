@@ -1,6 +1,6 @@
 configfile: "config.yaml" # json oder yaml file
 
-targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["data-sets/{}_{}_{}/interactions.links".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["data-sets/{}_{}_{}/go_and_kegg.memberships".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
+targets = ["scores/{}_{}_{}_module_fc_pval.txt".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["GO/{}_gsymb2go.map".format(experiment) for experiment in config["experiments"]] + ["data-sets/{}_{}_{}/interactions.links".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["data-sets/{}_{}_{}/go_and_kegg.memberships".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]] + ["data-sets/{}_{}_{}/proteins.nodes".format(experiment, network, fdr) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment]]
 
 target_modules = ["scores/{}_{}_{}_module_{}.txt".format(experiment, network, fdr, i) for experiment in config["experiments"] for network in config["networks"] for fdr in config["FDRs"][network][experiment] for i in range(1) ]
 
@@ -241,3 +241,11 @@ rule plot_stripchart:
         "envs/python.yaml"
     script:
         "scripts/plot-stripchart.py"
+
+rule add_other_score:
+    input:
+        "data-sets/{experiment}_{network}_{FDR}/proteins.nodes"
+    output:
+        "data-sets/{experiment}_{network}_{FDR}/proteins.nodes"
+    script:
+        "scripts/add_other_scores.py"
