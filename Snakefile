@@ -11,7 +11,7 @@ target_stripcharts = expand("plots/{experiment}_top{n}_stripchart.pdf", experime
 #print(target_modules)
 
 wildcard_constraints:
-    experiment="\w+_vs_\w+",
+    experiment="|".join(config["experiments"]),
     network="|".join(config["networks"])
 
 rule all:
