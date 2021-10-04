@@ -99,3 +99,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+networks/irefindex14+kegg09.txt
