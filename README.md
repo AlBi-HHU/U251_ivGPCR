@@ -113,24 +113,5 @@ whith `<container-id>` being the ID of the container.
 
 ## Remarks regarding reproducibility
 
-GO terms and KEGG pathways are snapshots from March 2018. They can be replaced by new, udated versions by deleting the corresponding files in the `GO/` and `KEGG/` subdirectories. Note, however, that the results of the enrichment process may change.
-<<<<<<< HEAD
-=======
+GO terms and KEGG pathways are snapshots from March 2018. They can be replaced by new, updated versions by deleting the corresponding files in the `GO/` and `KEGG/` subdirectories. Note, however, that the results of the enrichment process may change.
 
-same holds vor heinz.
-
-## TODO
-
-* Write this README
-* networks --> provide as data or get via Snakemake?
-  * up to date?
-* start w/raw data?
-* KEGG pathway enrichment -- discuss background. rule needs condas scipy, pandas
-* multiple modules
-* root at STAT3
-* differences between modules? Venn diagram or cooler?
-* How to distribute eXamine so that it runs?
-* get multiple testing correction in GO and KEGG enrichment
-* Rechte? Zum Beispiel an dem KEGG-Kram, den wir ins Repository gelegt haben?
-* double-check enrichment. values ar sooo low for big modules. realistic?
->>>>>>> 5f440f8643e386d90a798325ad73f773daf1f28b
