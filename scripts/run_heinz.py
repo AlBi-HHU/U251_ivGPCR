@@ -36,7 +36,8 @@ for i in range(1):
                         "-o", "scores/{}_{}_{}_module.txt".format(experiment, network, FDR),
                         #"-o", "scores/{}_{}_{}_module_{}.txt".format(experiment, network, FDR, i),
                         #"-r", "TP53",
-                        "-v", '0']
+                        "-v", '0',#,
+                        "-t", '1800']
                         # ">", "scores/{}_{}_module.dot".format(experiment, FDR)]
 
     logger.info('Running Heinz on {} with FDR {} and network {}, computing module {} ...'.format(experiment, FDR, network, i))

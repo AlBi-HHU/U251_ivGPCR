@@ -70,36 +70,40 @@ pvals = list(P['p'])
 rej, pcorr = smp.multipletests(pvals, alpha=0.05, method='bonferroni', is_sorted=False, returnsorted=False)[:2]
 #print(pvals, pcorr)
 
-P.to_csv("foo.csv")
+#P.to_csv("foo.csv")
 
 P['p_corr'] = pcorr
 
 P = P.sort_values(by=['p_corr'])
+#print(P)
 
 with open (args.ao, 'at') as annotation:
     #add enriched pathways
     i = 0
     for index, row in P.iterrows():
+        #print(row)
         if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
-        annotation.write(row['ID'] + "\tKEGG all enriched\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+        annotation.write("KEGG_all_" + row['ID'] + "\tKEGG all enriched\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         i = i + 1
     annotation.flush()
+    #print("now all")
     # add signaling pathways
     for index, row in P.iterrows():
+        #print(row)
         if row['ID'] in signal_transduction_32 and row['shared'] > 0:
-            annotation.write(row['ID'] + "\tKEGG signal transduction\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+            annotation.write("KEGG_ST_" + row['ID'] + "\tKEGG signal transduction\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         annotation.flush()
         if row['ID'] in signaling_mol_33 and row['shared'] > 0:
-            annotation.write(row['ID'] + "\tKEGG signaling mol. and int.\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+            annotation.write("KEGG_SMI_" + row['ID'] + "\tKEGG signaling mol. and int.\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         annotation.flush()
         if row['ID'] in cellular_processes_4 and row['shared'] > 0:
-            annotation.write(row['ID'] + "\tKEGG cellular processes\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+            annotation.write("KEGG_CP_" + row['ID'] + "\tKEGG cellular processes\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         annotation.flush()
         if row['ID'] in diseases_6 and row['shared'] > 0:
-            annotation.write(row['ID'] + "\tKEGG diseases\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+            annotation.write("KEGG_dis_" + row['ID'] + "\tKEGG diseases\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
         annotation.flush()
         if row['ID'] in extra and row['shared'] > 0:
-            annotation.write(row['ID'] + "\tKEGG extra\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
+            annotation.write("KEGG_extra_" + row['ID'] + "\tKEGG extra\t" + str('%.2E' % row['p_corr']) + "\t" + row['description'] + "\thttp://www.kegg.jp\n")
 
 
 
@@ -107,5 +111,10 @@ with open (args.mo, 'at') as memberships:
     #i = 0
     for index, row in P.iterrows():
         #if i >= 30 or row['p_corr'] >= .05: break # only max. 30 pathways
-        memberships.write(row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
+        memberships.write("KEGG_all_" + row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
+        memberships.write("KEGG_ST_" + row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
+        memberships.write("KEGG_SMI_" + row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
+        memberships.write("KEGG_CP_" + row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
+        memberships.write("KEGG_dis_" + row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
+        memberships.write("KEGG_extra_" + row['ID'] + "\t" + "\t".join(row['genes']) + "\n")
         #i = i + 1

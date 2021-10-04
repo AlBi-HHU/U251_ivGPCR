@@ -11,7 +11,8 @@ target_stripcharts = expand("plots/{experiment}_top{n}_stripchart.pdf", experime
 #print(target_modules)
 
 wildcard_constraints:
-    experiment = '\w+_vs_\w+'
+    experiment="|".join(config["experiments"]),
+    network="|".join(config["networks"])
 
 rule all:
     input:
@@ -203,6 +204,7 @@ rule eXamine_sets:
         """
         python scripts/go_modules.py  -g {input[0]} -n {input[1]} -s {input[2]} -oa {output[0]} -ol {output[1]}
         python scripts/analyzeKEGG.py -m {input[4]} -b {input[5]} -ao {output[0]} -mo {output[1]}
+        python scripts/add_custom.py -ao {output[0]} -mo {output[1]}
         """
 
 rule merge_heinz_deseq2:
@@ -215,6 +217,45 @@ rule merge_heinz_deseq2:
         "envs/python.yaml"
     shell:
         "touch {output}; scripts/merge_mod_deseq.py -m {input[0]} -d {input[1]} -o {output}"
+
+rule HGNC_iref:
+    input: "raw_data/networks/9606.mitab.06-11-2021.txt"
+    output: "networks/iref_HGNC.txt"
+    shell: "python scripts/IREF_to_HGNC.py -i {input} -o {output}"
+
+rule extract_HINT_LCHQ:
+    input:
+        "networks/HomoSapiens_lcb_hq.txt"
+    output:
+        "networks/HINT_lcb_hq.txt"
+    shell:
+        "tail -n +2 {input} | cut -f 3,4 > {output}"
+
+rule extract_HINT_HT:
+    input:
+        "networks/HomoSapiens_htb_hq.txt"
+    output:
+        "networks/HINT_ht.txt"
+    shell:
+        "tail -n +2 {input} | cut -f 3,4 > {output}"
+
+
+rule extract_HINT_HQ:
+    input:
+        "networks/HomoSapiens_binary_hq.txt"
+    output:
+        "networks/HINT_hq.txt"
+    shell:
+        "tail -n +2 {input} | cut -f 3,4 |  sed '/UBC\t/d' | sed '/\tUBC/d'  > {output}"
+
+rule extract_HINT_ALL:
+    input:
+        "raw_data/networks/HomoSapiens_binary_all.txt"
+    output:
+        "networks/HINT_all.txt"
+    shell:
+        "tail -n +2 {input} | cut -f 3,4 |  sed '/UBC\t/d' | sed '/\tUBC/d'  > {output}"
+
 
 rule filter_STRING:
     input:

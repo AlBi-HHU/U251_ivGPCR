@@ -1,52 +1,92 @@
 experiments:
   # - untreated_vs_stimulated  -- no need: previous runs show that there are no significant differences
   - US28_vs_stimulated
-  - UL33_vs_stimulated
+  #- UL33_vs_stimulated
 
 networks:
-  HPRD: "HPRD_Release9_062910_Heinz.txt"
-  STRING: "9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
+  #HPRD: "HPRD_Release9_062910_Heinz.txt"
+  #STRING: "9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
+  #STRINGminusfirst: "9606.protein.links.v10_mapped_geneIDs_700_no_UBC_no_module.txt"
   IREFKEGG: "irefindex14+kegg09.txt_no_UBC.txt"
+  #HINTLCHQ: "HINT_lcb_hq.txt"
+  #HINTHQ: "HINT_hq.txt"
+  #HINT_HT: "HINT_ht.txt"
+  #HINT_ALL: "HINT_all.txt"
+  IREF: "iref_HGNC.txt"
+
 
 #ENSEMBL:
 #  version: "GRCh38.p10"
 
 FDRs:
-  HPRD:
-    # untreated_vs_stimulated:
-    #   - 0.05 # empty module --> nothing to visualize
+  #HPRD:
+  #   # untreated_vs_stimulated:
+  #   #   - 0.05 # empty module --> nothing to visualize
+    #US28_vs_stimulated:
+  #     #- 1 # I want a maximal module to check the enrichment
+  #     #- 1e-10
+  #     - 1e-75
+  #     #- 1e-100
+      #- 1e-150
+      #- 1e-175
+  #   UL33_vs_stimulated:
+  #     - 1e-25
+  #     - 1e-50
+  #     - 1e-65
+  #     - 1e-70
+  IREFKEGG:
     US28_vs_stimulated:
-      #- 1 # I want a maximal module to check the enrichment
-      #- 1e-10
-      - 1e-75
-      #- 1e-100
+      - 1e-150
+  IREF:
+    US28_vs_stimulated:
       - 1e-150
       - 1e-175
-    UL33_vs_stimulated:
-      - 1e-25
-      - 1e-50
-      - 1e-65
-      - 1e-70
-  STRING:
+      - 1e-125
+      - 1e-100
+  # HINTLCHQ:
+  #   US28_vs_stimulated:
+  #     - 1e-150
+  # HINTHQ:
+  #  US28_vs_stimulated:
+  #     - 1e-150
+  #     - 1e-125
+  # HINT_HT:
+  #   US28_vs_stimulated:
+  #      - 1e-150
+  #      - 1e-125
+  #      - 1e-100
+  # HINT_ALL:
+  #   US28_vs_stimulated:
+  #     - 1e-160
+  #     - 1e-100
+  #     - 1e-75
+
+  #STRING:
     # untreated_vs_stimulated:
     #    - 0.25
-    US28_vs_stimulated:
+    #US28_vs_stimulated:
       #- 1e-75
       #- 1e-100
-      - 1e-150
-      - 1e-175
-    UL33_vs_stimulated:
-      - 1e-30
-      - 1e-50
-      - 1e-65
+      #- 1e-150
+      #- 1e-175
+    #UL33_vs_stimulated:
+      #- 1e-30
+      #- 1e-50
+      #- 1e-65
       #- 1e-70
-  IREFKEGG:
-    # untreated_vs_stimulated:
-    #   - 0.25
-    US28_vs_stimulated:
-      - 1e-75
-    #- 1e-150
-    UL33_vs_stimulated:
-      - 1e-75
+  #STRINGminusfirst:
+    #US28_vs_stimulated:
+       #- 1e-75
+       #- 1e-100
+       #- 1e-150
+  #     - 1e-175
+  #     # IREFKEGG:
+  #   # untreated_vs_stimulated:
+  #   #   - 0.25
+  #   US28_vs_stimulated:
+  #     - 1e-75
+  #   #- 1e-150
+    #UL33_vs_stimulated:
+       #- 1e-30
 
 condition_re: "(?P<condition>.+)_[0-9]+"
