@@ -1,6 +1,7 @@
 experiments:
   # - untreated_vs_stimulated  -- no need: previous runs show that there are no significant differences
   - US28_vs_stimulated
+<<<<<<< HEAD
   #- UL33_vs_stimulated
 
 networks:
@@ -14,11 +15,14 @@ networks:
   #HINT_ALL: "HINT_all.txt"
   IREF: "iref_HGNC.txt"
 
+  #HPRD: "HPRD_Release9_062910_Heinz.txt"
+  #STRING: "9606.protein.links.v10_mapped_geneIDs_700_no_UBC.txt"
 
 #ENSEMBL:
 #  version: "GRCh38.p10"
 
 FDRs:
+<<<<<<< HEAD
   #HPRD:
   #   # untreated_vs_stimulated:
   #   #   - 0.05 # empty module --> nothing to visualize
